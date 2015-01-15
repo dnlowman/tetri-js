@@ -1,0 +1,795 @@
+/* Shapes */
+var oShape = function(x, y){
+	this.positionX = x;
+	this.positionY = y;
+	this.width = 2;
+	this.height = 2;
+	this.positions = [2];
+	this.positions[0] = [2];
+	this.positions[1] = [2];
+	this.positions[0][0] = true;
+	this.positions[0][1] = true;
+	this.positions[1][0] = true;
+	this.positions[1][1] = true;
+};
+
+var iShape = function(x, y){
+	this.positionX = x;
+	this.positionY = y;
+	this.orientation = 'down';
+	this.width = 4;
+	this.height = 1;
+	this.positions = [4];
+	this.positions[0] = [1];
+	this.positions[1] = [1];
+	this.positions[2] = [1];
+	this.positions[3] = [1];
+	this.positions[0][0] = true;
+	this.positions[0][1] = true;
+	this.positions[0][2] = true;
+	this.positions[0][3] = true;
+};
+
+var jShape = function(x, y){
+	this.positionX = x;
+	this.positionY = y;
+	this.orientation = 'down';
+	this.width = 3;
+	this.height = 2;
+	this.positions = [3];
+	this.positions[0] = [2];
+	this.positions[1] = [2];
+	this.positions[2] = [2];
+	this.positions[3] = [2];
+	this.positions[0][0] = true;
+	this.positions[0][1] = false;
+	this.positions[0][2] = false;
+	this.positions[1][0] = true;
+	this.positions[1][1] = true;
+	this.positions[1][2] = true;
+};
+
+var lShape = function(x, y){
+	this.positionX = x;
+	this.positionY = y;
+	this.orientation = 'down';
+	this.width = 3;
+	this.height = 2;
+	this.positions = [3];
+	this.positions[0] = [2];
+	this.positions[1] = [2];
+	this.positions[2] = [2];
+	this.positions[3] = [2];
+	this.positions[0][0] = false;
+	this.positions[0][1] = false;
+	this.positions[0][2] = true;
+	this.positions[1][0] = true;
+	this.positions[1][1] = true;
+	this.positions[1][2] = true;
+};
+
+var sShape = function(x, y){
+	this.positionX = x;
+	this.positionY = y;
+	this.orientation = 'down';
+	this.width = 3;
+	this.height = 2;
+	this.positions = [3];
+	this.positions[0] = [2];
+	this.positions[1] = [2];
+	this.positions[2] = [2];
+	this.positions[3] = [2];
+	this.positions[0][0] = false;
+	this.positions[0][1] = true;
+	this.positions[0][2] = true;
+	this.positions[1][0] = true;
+	this.positions[1][1] = true;
+	this.positions[1][2] = false;
+};
+
+var tShape = function(x, y){
+	this.positionX = x;
+	this.positionY = y;
+	this.orientation = 'down';
+	this.width = 3;
+	this.height = 2;
+	this.positions = [3];
+	this.positions[0] = [2];
+	this.positions[1] = [2];
+	this.positions[2] = [2];
+	this.positions[3] = [2];
+	this.positions[0][0] = false;
+	this.positions[0][1] = true;
+	this.positions[0][2] = false;
+	this.positions[1][0] = true;
+	this.positions[1][1] = true;
+	this.positions[1][2] = true;
+};
+
+var zShape = function(x, y){
+	this.positionX = x;
+	this.positionY = y;
+	this.orientation = 'down';
+	this.width = 3;
+	this.height = 2;
+	this.positions = [3];
+	this.positions[0] = [2];
+	this.positions[1] = [2];
+	this.positions[2] = [2];
+	this.positions[3] = [2];
+	this.positions[0][0] = true;
+	this.positions[0][1] = true;
+	this.positions[0][2] = false;
+	this.positions[1][0] = false;
+	this.positions[1][1] = true;
+	this.positions[1][2] = true;
+};
+/* End of Shapes */
+
+
+gameObject.prototype.addShape = function(shape){
+	if(shape.positionX + shape.width > this.gameWidth
+		|| shape.positionX < 0
+		|| shape.positionY + shape.height > this.gameHeight
+		|| shape.positionY < 0) return false;
+
+	var tempGrid = this.gameGrid;
+
+	for(var h = 0; h < shape.height; ++h)
+	{
+		for(var w = 0; w < shape.width; ++w)
+		{
+			var xPos = shape.positionX + h;
+			var yPos = shape.positionY + w;
+			if(shape.positions[h][w] === true){
+				if(this.gameGrid[xPos][yPos] === true) return false;
+				tempGrid[xPos][yPos] = true;
+			}
+		}
+	}
+
+	this.shapes.push(shape);
+	this.gameGrid = tempGrid;
+	return true;
+};
+
+gameObject.prototype.printGrid = function(){
+	for(var w = 0; w < this.gameWidth; ++w){
+		var string;
+		for(var h = 0; h < this.gameHeight; ++h){
+			string += (this.gameGrid[w][h] === true) ? 'O' : '#';
+		}
+		console.log('\n' + string + '\n');
+	}
+};
+
+
+gameObject.prototype.rotateShape = function(){
+	var lastShape = this.shapes[this.shapes.length - 1];
+	if(lastShape instanceof oShape) return; // O shape cannot be rotated!
+	switch(lastShape.orientation){
+		case 'down':
+		{
+			lastShape.orientation = 'right';
+			break;
+		}
+
+		case 'right':
+		{
+			lastShape.orientation = 'up';
+			break;
+		}
+
+		case 'up':
+		{
+			lastShape.orientation = 'left';
+			break;
+		}
+
+		case 'left':
+		{
+			lastShape.orientation = 'down';
+			break;
+		}
+	}
+};
+
+gameObject.prototype.removeIShape = function(shape){
+	switch(shape.orientation){
+		case 'down':
+		{
+			this.gameGrid[shape.positionX][shape.positionY] = false;
+			this.gameGrid[shape.positionX][shape.positionY + 1] = false;
+			this.gameGrid[shape.positionX][shape.positionY + 2] = false;
+			this.gameGrid[shape.positionX][shape.positionY + 3] = false;
+			break;
+		}
+
+		case 'right':
+		{
+			break;
+		}
+
+		case 'up':
+		{
+			break;
+		}
+
+		case 'left':
+		{
+			break;
+		}
+	}
+};
+
+gameObject.prototype.addIShape = function(x, y, orientation){
+	
+};
+
+describe("A new T shape being added to a tetris grid", function(){
+	var game;
+
+	beforeEach(function(){
+		game = new gameObject(20, 20);
+		game.initGameGrid();
+		spyOn(game, 'initGameGrid').and.callThrough();
+	});
+
+	it("should be added at the position 10, 10 and set the four positions within the array to true", function(){
+		var result = game.addIShape(10, 10, 'down');
+		expect(game.gameGrid[9][10]).toEqual(true);
+		expect(game.gameGrid[10][9]).toEqual(true);
+		expect(game.gameGrid[10][10]).toEqual(true);
+		expect(game.gameGrid[10][11]).toEqual(true);
+		expect(result).toEqual(true);
+	});
+
+	xit("should not be added if the shape is added outside of the grid area", function(){
+		var result = game.addShape(new tShape(21, 21));
+		expect(result).toEqual(false);
+
+		result = game.addShape(new tShape(20, 20));
+		expect(result).toEqual(false);
+
+		result = game.addShape(new tShape(19, 19));
+		expect(result).toEqual(false);
+
+		result = game.addShape(new tShape(19, 19));
+		expect(result).toEqual(false);
+
+		result = game.addShape(new tShape(-1, 10));
+		expect(result).toEqual(false);
+
+		result = game.addShape(new tShape(18, 19));
+		expect(result).toEqual(false);
+	});
+
+	xit("should not be added if the shape collides with an existing object being on the grid", function(){
+		var result = game.addShape(new oShape(10, 10));
+		expect(result).toEqual(true);
+
+		result = game.addShape(new tShape(10, 10));
+		expect(result).toEqual(false);
+	});
+
+});
+
+xdescribe("A new O shape being added to a tetris grid", function(){
+	var game;
+
+	beforeEach(function(){
+		game = new gameObject(20, 20);
+		game.initGameGrid();
+		spyOn(game, 'initGameGrid').and.callThrough();
+	});
+
+	it("should be added at the position 10, 10 and set the four positions within the array to true", function(){
+		var result = game.addShape(new oShape(10, 10));
+		expect(game.gameGrid[10][10]).toEqual(true);
+		expect(game.gameGrid[10][11]).toEqual(true);
+		expect(game.gameGrid[11][10]).toEqual(true);
+		expect(game.gameGrid[11][11]).toEqual(true);
+		expect(result).toEqual(true);
+	});
+
+	it("should not be added if the square is added outside of the grid area", function(){
+		var result = game.addShape(new oShape(21, 21));
+		expect(result).toEqual(false);
+
+		result = game.addShape(new oShape(20, 20));
+		expect(result).toEqual(false);
+
+		result = game.addShape(new oShape(19, 19));
+		expect(result).toEqual(false);
+
+		result = game.addShape(new oShape(19, 19));
+		expect(result).toEqual(false);
+
+		result = game.addShape(new oShape(-1, 10));
+		expect(result).toEqual(false);
+
+		result = game.addShape(new oShape(0, 19));
+		expect(result).toEqual(false);
+	});
+
+	it("should not be added if the square collides with an existing object being on the grid", function(){
+		var result = game.addShape(new oShape(10, 10));
+		expect(result).toEqual(true);
+
+		result = game.addShape(new oShape(10, 10));
+		expect(result).toEqual(false);
+	});
+
+});
+
+xdescribe("A new I shape being added to a tetris grid", function(){
+	var game;
+
+	beforeEach(function(){
+		game = new gameObject(20, 20);
+		game.initGameGrid();
+		spyOn(game, 'initGameGrid').and.callThrough();
+	});
+
+	it("should be added at the position 10, 10 and set the four positions within the array to true", function(){
+		var result = game.addShape(new iShape(10, 10));
+		expect(game.gameGrid[10][10]).toEqual(true);
+		expect(game.gameGrid[10][11]).toEqual(true);
+		expect(game.gameGrid[10][12]).toEqual(true);
+		expect(game.gameGrid[10][13]).toEqual(true);
+		expect(result).toEqual(true);
+	});
+
+	it("should not be added if the shape is added outside of the grid area", function(){
+		var result = game.addShape(new iShape(21, 21));
+		expect(result).toEqual(false);
+
+		result = game.addShape(new iShape(20, 20));
+		expect(result).toEqual(false);
+
+		result = game.addShape(new iShape(19, 19));
+		expect(result).toEqual(false);
+
+		result = game.addShape(new iShape(19, 19));
+		expect(result).toEqual(false);
+
+		result = game.addShape(new iShape(-1, 10));
+		expect(result).toEqual(false);
+
+		result = game.addShape(new iShape(18, 19));
+		expect(result).toEqual(false);
+	});
+
+	it("should not be added if the shape collides with an existing object being on the grid", function(){
+		var result = game.addShape(new oShape(10, 10));
+		expect(result).toEqual(true);
+
+		result = game.addShape(new iShape(10, 10));
+		expect(result).toEqual(false);
+	});
+
+});
+
+xdescribe("A new J shape being added to a tetris grid", function(){
+	var game;
+
+	beforeEach(function(){
+		game = new gameObject(20, 20);
+		game.initGameGrid();
+		spyOn(game, 'initGameGrid').and.callThrough();
+	});
+
+	it("should be added at the position 10, 10 and set the four positions within the array to true", function(){
+		var result = game.addShape(new jShape(10, 10));
+		expect(game.gameGrid[10][10]).toEqual(true);
+		expect(game.gameGrid[10][11]).toEqual(false);
+		expect(game.gameGrid[10][12]).toEqual(false);
+		expect(game.gameGrid[11][10]).toEqual(true);
+		expect(game.gameGrid[11][11]).toEqual(true);
+		expect(game.gameGrid[11][12]).toEqual(true);
+		expect(result).toEqual(true);
+	});
+
+	it("should not be added if the shape is added outside of the grid area", function(){
+		var result = game.addShape(new jShape(21, 21));
+		expect(result).toEqual(false);
+
+		result = game.addShape(new jShape(20, 20));
+		expect(result).toEqual(false);
+
+		result = game.addShape(new jShape(19, 19));
+		expect(result).toEqual(false);
+
+		result = game.addShape(new jShape(19, 19));
+		expect(result).toEqual(false);
+
+		result = game.addShape(new jShape(-1, 10));
+		expect(result).toEqual(false);
+
+		result = game.addShape(new jShape(18, 19));
+		expect(result).toEqual(false);
+	});
+
+	it("should not be added if the shape collides with an existing object being on the grid", function(){
+		var result = game.addShape(new oShape(10, 10));
+		expect(result).toEqual(true);
+
+		result = game.addShape(new jShape(10, 10));
+		expect(result).toEqual(false);
+	});
+
+});
+
+xdescribe("A new L shape being added to a tetris grid", function(){
+	var game;
+
+	beforeEach(function(){
+		game = new gameObject(20, 20);
+		game.initGameGrid();
+		spyOn(game, 'initGameGrid').and.callThrough();
+	});
+
+	it("should be added at the position 10, 10 and set the four positions within the array to true", function(){
+		var result = game.addShape(new lShape(10, 10));
+		expect(game.gameGrid[10][10]).toEqual(false);
+		expect(game.gameGrid[10][11]).toEqual(false);
+		expect(game.gameGrid[10][12]).toEqual(true);
+		expect(game.gameGrid[11][10]).toEqual(true);
+		expect(game.gameGrid[11][11]).toEqual(true);
+		expect(game.gameGrid[11][12]).toEqual(true);
+		expect(result).toEqual(true);
+	});
+
+	it("should not be added if the shape is added outside of the grid area", function(){
+		var result = game.addShape(new lShape(21, 21));
+		expect(result).toEqual(false);
+
+		result = game.addShape(new lShape(20, 20));
+		expect(result).toEqual(false);
+
+		result = game.addShape(new lShape(19, 19));
+		expect(result).toEqual(false);
+
+		result = game.addShape(new lShape(19, 19));
+		expect(result).toEqual(false);
+
+		result = game.addShape(new lShape(-1, 10));
+		expect(result).toEqual(false);
+
+		result = game.addShape(new lShape(18, 19));
+		expect(result).toEqual(false);
+	});
+
+	it("should not be added if the shape collides with an existing object being on the grid", function(){
+		var result = game.addShape(new oShape(10, 10));
+		expect(result).toEqual(true);
+
+		result = game.addShape(new lShape(10, 10));
+		expect(result).toEqual(false);
+	});
+
+});
+
+xdescribe("A new S shape being added to a tetris grid", function(){
+	var game;
+
+	beforeEach(function(){
+		game = new gameObject(20, 20);
+		game.initGameGrid();
+		spyOn(game, 'initGameGrid').and.callThrough();
+	});
+
+	it("should be added at the position 10, 10 and set the four positions within the array to true", function(){
+		var result = game.addShape(new sShape(10, 10));
+		expect(game.gameGrid[10][10]).toEqual(false);
+		expect(game.gameGrid[10][11]).toEqual(true);
+		expect(game.gameGrid[10][12]).toEqual(true);
+		expect(game.gameGrid[11][10]).toEqual(true);
+		expect(game.gameGrid[11][11]).toEqual(true);
+		expect(game.gameGrid[11][12]).toEqual(false);
+		expect(result).toEqual(true);
+	});
+
+	it("should not be added if the shape is added outside of the grid area", function(){
+		var result = game.addShape(new sShape(21, 21));
+		expect(result).toEqual(false);
+
+		result = game.addShape(new sShape(20, 20));
+		expect(result).toEqual(false);
+
+		result = game.addShape(new sShape(19, 19));
+		expect(result).toEqual(false);
+
+		result = game.addShape(new sShape(19, 19));
+		expect(result).toEqual(false);
+
+		result = game.addShape(new sShape(-1, 10));
+		expect(result).toEqual(false);
+
+		result = game.addShape(new sShape(18, 19));
+		expect(result).toEqual(false);
+	});
+
+	it("should not be added if the shape collides with an existing object being on the grid", function(){
+		var result = game.addShape(new oShape(10, 10));
+		expect(result).toEqual(true);
+
+		result = game.addShape(new sShape(10, 10));
+		expect(result).toEqual(false);
+	});
+});
+
+xdescribe("A new Z shape being added to a tetris grid", function(){
+	var game;
+	var gameZShape;
+
+	beforeEach(function(){
+		game = new gameObject(20, 20);
+		gameZShape = new zShape();
+		game.initGameGrid();
+		spyOn(game, 'initGameGrid').and.callThrough();
+	});
+
+	it("should be added at the position 10, 10 and set the four positions within the array to true", function(){
+		var result = game.addShape(new zShape(10, 10));
+		expect(game.gameGrid[10][10]).toEqual(true);
+		expect(game.gameGrid[10][11]).toEqual(true);
+		expect(game.gameGrid[10][12]).toEqual(false);
+		expect(game.gameGrid[11][10]).toEqual(false);
+		expect(game.gameGrid[11][11]).toEqual(true);
+		expect(game.gameGrid[11][12]).toEqual(true);
+		expect(result).toEqual(true);
+	});
+
+	it("should not be added if the shape is added outside of the grid area", function(){
+		var result = game.addShape(new zShape(21, 21));
+		expect(result).toEqual(false);
+
+		result = game.addShape(new zShape(20, 20));
+		expect(result).toEqual(false);
+
+		result = game.addShape(new zShape(19, 19));
+		expect(result).toEqual(false);
+
+		result = game.addShape(new zShape(19, 19));
+		expect(result).toEqual(false);
+
+		result = game.addShape(new zShape(-1, 10));
+		expect(result).toEqual(false);
+
+		result = game.addShape(new zShape(18, 19));
+		expect(result).toEqual(false);
+	});
+
+	it("should not be added if the shape collides with an existing object being on the grid", function(){
+		var result = game.addShape(new oShape(10, 10));
+		expect(result).toEqual(true);
+
+		result = game.addShape(new zShape(10, 10));
+		expect(result).toEqual(false);
+	});
+
+});
+
+xdescribe("A O shape being on the tetris grid", function(){
+	var game;
+
+	beforeEach(function(){
+		game = new gameObject(20, 20);
+		game.initGameGrid();
+		spyOn(game, 'initGameGrid').and.callThrough();
+		spyOn(game, 'rotateShape').and.callThrough();
+	});
+
+	it("should remain the same when rotated", function(){
+		var result = game.addShape(new oShape(10, 10));
+		expect(game.gameGrid[10][10]).toEqual(true);
+		expect(game.gameGrid[10][11]).toEqual(true);
+		expect(game.gameGrid[11][10]).toEqual(true);
+		expect(game.gameGrid[11][11]).toEqual(true);
+		expect(result).toEqual(true);
+		game.rotateShape();
+		expect(game.gameGrid[10][10]).toEqual(true);
+		expect(game.gameGrid[10][11]).toEqual(true);
+		expect(game.gameGrid[11][10]).toEqual(true);
+		expect(game.gameGrid[11][11]).toEqual(true);
+	});
+});
+
+xdescribe("A I shape being on the tetris grid", function(){
+	var game;
+
+	beforeEach(function(){
+		game = new gameObject(20, 20);
+		game.initGameGrid();
+		spyOn(game, 'initGameGrid').and.callThrough();
+		spyOn(game, 'rotateShape').and.callThrough();
+	});
+
+	it("should have a property called orientation and once rotated in the down orientation it should be in the right orientation", function(){
+		var gameIShape = new iShape(10, 10);
+		game.addShape(gameIShape);
+		expect(gameIShape.orientation).toEqual('down');
+		game.rotateShape();
+		expect(gameIShape.orientation).toEqual('right');
+	});
+
+	it("should have a method called removeIShape and once called the shape is removed from the game grid", function(){
+		var gameIShape = new iShape(10, 10);
+		game.addShape(gameIShape);
+		expect(game.gameGrid[10][10]).toEqual(true);
+		expect(game.gameGrid[10][11]).toEqual(true);
+		expect(game.gameGrid[10][12]).toEqual(true);
+		expect(game.gameGrid[10][13]).toEqual(true);
+		game.removeIShape(gameIShape);
+		expect(game.gameGrid[10][10]).toEqual(false);
+		expect(game.gameGrid[10][11]).toEqual(false);
+		expect(game.gameGrid[10][12]).toEqual(false);
+		expect(game.gameGrid[10][13]).toEqual(false);
+	});
+
+	xit("should be removed from the tetris grid once rotated", function(){
+		var gameIShape = new iShape(10, 10);
+		game.addShape(gameIShape);
+		expect(game.gameGrid[10][10]).toEqual(true);
+		expect(game.gameGrid[10][11]).toEqual(true);
+		expect(game.gameGrid[10][12]).toEqual(true);
+		expect(game.gameGrid[10][13]).toEqual(true);
+		game.rotateShape();
+		expect(game.gameGrid[10][10]).toEqual(false);
+		expect(game.gameGrid[10][11]).toEqual(false);
+		expect(game.gameGrid[10][12]).toEqual(false);
+		expect(game.gameGrid[10][13]).toEqual(false);
+	});
+
+	xit("should remain the same when rotated", function(){
+		var result = game.addShape(new iShape(10, 10));
+		expect(game.gameGrid[10][10]).toEqual(true);
+		expect(game.gameGrid[10][11]).toEqual(true);
+		expect(game.gameGrid[10][12]).toEqual(true);
+		expect(game.gameGrid[10][13]).toEqual(true);
+		expect(result).toEqual(true);
+		game.rotateShape();
+		expect(game.gameGrid[9][10]).toEqual(true);
+		expect(game.gameGrid[10][10]).toEqual(true);
+		expect(game.gameGrid[11][10]).toEqual(true);
+		expect(game.gameGrid[12][10]).toEqual(true);
+	});
+});
+
+describe("When adding a T shape to a tetris grid", function(){
+	var game;
+
+	beforeEach(function(){
+		game = new gameObject(20, 20);
+		game.initGameGrid();
+		spyOn(game, 'initGameGrid').and.callThrough();
+	});
+
+	it("should be added in the position 10, 10 in the up orientation and set the indicies within the array to true", function(){
+		game.addShape(new tShape(10, 10, 'up'));
+		expect(game.gameGrid[10][10]).toEqual(false);
+		expect(game.gameGrid[10][11]).toEqual(true);
+		expect(game.gameGrid[10][12]).toEqual(false);
+		expect(game.gameGrid[11][10]).toEqual(true);
+		expect(game.gameGrid[11][11]).toEqual(true);
+		expect(game.gameGrid[11][12]).toEqual(true);
+	});
+
+	it("should be added in the position 10, 10 in the down orientation and set the indicies within the array to true", function(){
+		game.addShape(new tShape(10, 10, 'down'));
+		expect(game.gameGrid[10][10]).toEqual(true);
+		expect(game.gameGrid[10][11]).toEqual(true);
+		expect(game.gameGrid[10][12]).toEqual(true);
+		expect(game.gameGrid[11][10]).toEqual(false);
+		expect(game.gameGrid[11][11]).toEqual(true);
+		expect(game.gameGrid[11][12]).toEqual(false);
+	});
+
+	it("should be added in the position 10, 10 in the left orientation and set the indicies within the array to true", function(){
+		game.addShape(new tShape(10, 10, 'left'));
+		expect(game.gameGrid[10][10]).toEqual(false);
+		expect(game.gameGrid[10][11]).toEqual(true);
+		expect(game.gameGrid[11][10]).toEqual(true);
+		expect(game.gameGrid[11][11]).toEqual(true);
+		expect(game.gameGrid[12][10]).toEqual(false);
+		expect(game.gameGrid[12][11]).toEqual(true);
+	});
+
+	it("should be added in the position 10, 10 in the right orientation and set the indicies within the array to true", function(){
+		game.addShape(new tShape(10, 10, 'right'));
+		expect(game.gameGrid[10][10]).toEqual(true);
+		expect(game.gameGrid[10][11]).toEqual(false);
+		expect(game.gameGrid[11][10]).toEqual(true);
+		expect(game.gameGrid[11][11]).toEqual(true);
+		expect(game.gameGrid[12][10]).toEqual(true);
+		expect(game.gameGrid[12][11]).toEqual(false);
+	});
+});
+
+describe("When rotating a T shape on a tetris grid", function(){
+	var game;
+
+	beforeEach(function(){
+		game = new gameObject(20, 20);
+		game.initGameGrid();
+		spyOn(game, 'initGameGrid').and.callThrough();
+	});
+
+	it("should be in the 10, 10 position facing up then the shape should be removed and readded in the correct orientation setting the correct indicies to true", function(){
+		var shape = new tShape(10, 10, 'up');
+		game.addShape(shape);
+		expect(game.gameGrid[10][10]).toEqual(false);
+		expect(game.gameGrid[10][11]).toEqual(true);
+		expect(game.gameGrid[10][12]).toEqual(false);
+		expect(game.gameGrid[11][10]).toEqual(true);
+		expect(game.gameGrid[11][11]).toEqual(true);
+		expect(game.gameGrid[11][12]).toEqual(true);
+
+		game.rotateShape(shape);
+		expect(game.gameGrid[10][10]).toEqual(false);
+		expect(game.gameGrid[10][11]).toEqual(true);
+		expect(game.gameGrid[11][10]).toEqual(true);
+		expect(game.gameGrid[11][11]).toEqual(true);
+		expect(game.gameGrid[12][10]).toEqual(false);
+		expect(game.gameGrid[12][11]).toEqual(true);
+	});
+
+	it("should be in the 0, 0 position facing right then the shape should not be rotated", function(){
+		var shape = new tShape(0, 0, 'right');
+		game.addShape(shape);
+		game.printGrid();
+		expect(game.gameGrid[0][0]).toEqual(true);
+		expect(game.gameGrid[0][1]).toEqual(false);
+		expect(game.gameGrid[1][0]).toEqual(true);
+		expect(game.gameGrid[1][1]).toEqual(true);
+		expect(game.gameGrid[2][0]).toEqual(true);
+		expect(game.gameGrid[2][1]).toEqual(false);
+
+		game.rotateShape(shape);
+		expect(game.gameGrid[0][0]).toEqual(true);
+		expect(game.gameGrid[0][1]).toEqual(false);
+		expect(game.gameGrid[1][0]).toEqual(true);
+		expect(game.gameGrid[1][1]).toEqual(true);
+		expect(game.gameGrid[2][0]).toEqual(true);
+		expect(game.gameGrid[2][1]).toEqual(false);
+	});
+
+	it("should be in the 19, 0 position facing left then the shape should not be rotated", function(){
+		var shape = new tShape(18, 0, 'left');
+		game.addShape(shape);
+		expect(game.gameGrid[0][18]).toEqual(false);
+		expect(game.gameGrid[0][19]).toEqual(true);
+		expect(game.gameGrid[1][18]).toEqual(true);
+		expect(game.gameGrid[1][19]).toEqual(true);
+		expect(game.gameGrid[2][18]).toEqual(false);
+		expect(game.gameGrid[2][19]).toEqual(true);
+		game.rotateShape(shape);
+		expect(game.gameGrid[0][18]).toEqual(false);
+		expect(game.gameGrid[0][19]).toEqual(true);
+		expect(game.gameGrid[1][18]).toEqual(true);
+		expect(game.gameGrid[1][19]).toEqual(true);
+		expect(game.gameGrid[2][18]).toEqual(false);
+		expect(game.gameGrid[2][19]).toEqual(true);
+	});
+
+	it("should be in the 0, 0 position facing down then the shape should not be rotated", function(){
+		var shape = new tShape(0, 0, 'down');
+		game.addShape(shape);
+		game.printGrid();
+		expect(game.gameGrid[0][0]).toEqual(true);
+		expect(game.gameGrid[0][1]).toEqual(true);
+		expect(game.gameGrid[0][2]).toEqual(true);
+		expect(game.gameGrid[1][0]).toEqual(false);
+		expect(game.gameGrid[1][1]).toEqual(true);
+		expect(game.gameGrid[1][2]).toEqual(false);
+		game.rotateShape(shape);
+		game.printGrid();
+		expect(game.gameGrid[0][0]).toEqual(true);
+		expect(game.gameGrid[0][1]).toEqual(true);
+		expect(game.gameGrid[0][2]).toEqual(true);
+		expect(game.gameGrid[1][0]).toEqual(false);
+		expect(game.gameGrid[1][1]).toEqual(true);
+		expect(game.gameGrid[1][2]).toEqual(false);
+	});
+});
