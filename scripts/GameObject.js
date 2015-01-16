@@ -38,7 +38,7 @@ GameObject.prototype.addShape = function(shape){
 	}
 
 	if(shape.arePointsLegal(shape.points) === true) { this.currentShape = shape; }
-	else { console.log('Theres something there!'); }
+	else { console.log('Game over!'); }
 };
 
 GameObject.prototype.renderShapes = function(){
@@ -103,22 +103,35 @@ GameObject.prototype.moveRowsDown = function(rowDeleted)
 		{
 			if(this.landedShapeSprites[w][h] != 10 && this.landedShapeSprites[w][h])
 			{ 
-				console.log('Landed Sprite Color: ' + this.landedShapeSprites[w][h].color);
+				var dropPosition = this.findNextAvaiilableDropPosition(w, h + 1);
+
 				var x = this.landedShapeSprites[w][h].position.x;
 				var y = this.landedShapeSprites[w][h].position.y;
 				var color = this.landedShapeSpritesColors[w][h];
-				this.gameGrid[w][h + 1] = true;
-				var rect = createRectangle(w, h + 1, color);
-				this.landedShapeSprites[w][h + 1] = rect;
+				this.gameGrid[w][dropPosition] = true;
+				var rect = createRectangle(w, dropPosition, color);
+				this.landedShapeSprites[w][dropPosition] = rect;
+				this.landedShapeSpritesColors[w][dropPosition] = color;
 				stage.addChild(rect);
 				this.gameGrid[w][h] = false;
 				stage.removeChild(this.landedShapeSprites[w][h]);
 				this.landedShapeSprites[w][h] = null;
-				this.landedShapeSpritesColors[w][h] = -1;
+				this.landedShapeSpritesColors[w][h] = 0;
 			}
 		}
 	}
 };
+
+GameObject.prototype.findNextAvaiilableDropPosition = function(x, y)
+{
+	for(var i = y; i < this.gameHeight; ++i)
+	{
+		if(!this.landedShapeSprites[x][i])
+		{
+			return y;
+		}
+	}
+}
 
 GameObject.prototype.onShapeLanded = function(){
 	var self = this;

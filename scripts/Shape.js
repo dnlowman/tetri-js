@@ -97,8 +97,6 @@ Shape.prototype.incrementShapePosition = function(xDelta, yDelta) {
 		});
 
 	}catch(e){
-		console.log(e);
-		console.log(xOOB);
 		if(e == "Y Out of bounds" || e == "Point collides with another shape")
 		{
 			if(xDelta === 0)

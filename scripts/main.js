@@ -48,31 +48,35 @@ var FRAME_INTERVAL = 1000;
 	var KEYBOARD_DOWN_ARROW_KEY = 40;
 
 	$(document).keydown(function(event){
-		console.log(event.which);
-		event.preventDefault();
+		if(FRAME_INTERVAL == 0) return;
+
 		switch(event.which)
 		{
 			case KEYBOARD_LEFT_ARROW_KEY:
 			{
 				game.currentShape.incrementShapePosition(-1, 0);
+				event.preventDefault();
 				break;
 			}
 
 			case KEYBOARD_RIGHT_ARROW_KEY:
 			{
 				game.currentShape.incrementShapePosition(1, 0);
+				event.preventDefault();
 				break;
 			}
 
 			case KEYBOARD_UP_ARROW_KEY:
 			{
 				game.currentShape.rotateShape();
+				event.preventDefault();
 				break;
 			}
 
 			case KEYBOARD_DOWN_ARROW_KEY:
 			{
 				FRAME_INTERVAL = 0;
+				event.preventDefault();
 				break;
 			}
 		}
